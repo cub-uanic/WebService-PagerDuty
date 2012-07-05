@@ -5,6 +5,88 @@ use strict;
 use warnings;
 
 use Any::Moose;
+use URI;
+
+our $VERSION = '0.01';
+
+has user => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 0,
+);
+has password => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 0,
+);
+has subdomain => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 0,
+);
+
+has use_ssl => (
+    is       => 'ro',
+    isa      => 'Bool',
+    required => 0,
+    default  => 1,
+);
+
+has event_url => (
+    is       => 'ro',
+    isa      => 'URI',
+    required => 0,
+    default  => sub {
+        my $self = shift;
+        URI->new( ( $self->use_ssl ? 'https' : 'http' ) . '://events.pagerduty.com/generic/2010-04-15/create_event.json' );
+    },
+);
+has incidents_url => (
+    is       => 'ro',
+    isa      => 'URI',
+    required => 0,
+    default  => sub {
+        my $self = shift;
+        URI->new( 'https://' . $self->subdomain . '.pagerduty.com/api/v1/incidents' );
+    },
+);
+has schedules_url => (
+    is       => 'ro',
+    isa      => 'URI',
+    required => 0,
+    default  => sub {
+        my $self = shift;
+        URI->new( 'https://' . $self->subdomain . '.pagerduty.com/api/v1/schedules' );
+    },
+);
+
+sub event {
+    my $self = shift;
+    return WebService::PagerDuty::Event->new(
+        url => $self->event_url,
+        @_
+    );
+}
+
+sub incidents {
+    my $self = shift;
+    return WebService::PagerDuty::Incidents->new(
+        url      => $self->incidents_url,
+        user     => $self->user,
+        password => $self->password,
+        @_
+    );
+}
+
+sub schedules {
+    my $self = shift;
+    return WebService::PagerDuty::Schedules->new(
+        url      => $self->schedules_url,
+        user     => $self->user,
+        password => $self->password,
+        @_
+    );
+}
 
 no Any::Moose;
 
