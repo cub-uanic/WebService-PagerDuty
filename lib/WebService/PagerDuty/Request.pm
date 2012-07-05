@@ -5,9 +5,15 @@ use strict;
 use warnings;
 
 use Any::Moose;
-use URI;
+use HTTP::Request;
+use LWP::UserAgent;
+use JSON;
 
-our $VERSION = '0.01';
+has 'agent' => (
+    is      => 'ro',
+    isa     => 'Object',
+    default => sub { LWP::UserAgent->new }
+);
 
 sub get {
     my $self = shift;
@@ -20,8 +26,29 @@ sub post {
 }
 
 sub _perform_request {
-    my $self = shift;
-    return WebService::PagerDuty::Response->new();
+    my ( $self, %args ) = @_;
+
+    my $method   = delete $args{method};
+    my $url      = delete $args{url};
+    my $user     = delete $args{user};
+    my $password = delete $args{password};
+    my $params   = delete $args{params};
+    my $body     = {%args};
+
+    die( 'Unknown method: ' . $method ) unless $method =~ m/^(get|post)$/io;
+
+    my $headers = HTTP::Headers->new;
+    $headers->header( 'Content-Type' => 'application/json' ) if %$body;
+    $headers->authorization_basic( $user, $password ) if $user && $password;
+
+    my $content = '';
+    $content = encode_json($body) if %$body;
+
+    my $request = HTTP::Request->new( $method, $url, $headers, $content );
+
+    my $response = $self->agent->request($request);
+
+    return WebService::PagerDuty::Response->new($response);
 }
 
 no Any::Moose;

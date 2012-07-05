@@ -24,8 +24,16 @@ has password => (
 );
 
 sub entries {
-    my $self = shift;
+    my ( $self, %params ) = @_;
+
+    return WebService::PagerDuty::Request->get(
+        url      => $self->url,
+        user     => $self->user,
+        password => $self->password,
+        params   => \%params,
+    );
 }
+*list = \&entries;
 
 no Any::Moose;
 

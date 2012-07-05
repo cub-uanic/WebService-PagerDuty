@@ -12,18 +12,84 @@ has url => (
     isa      => 'URI',
     required => 1,
 );
+has service_key => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+);
+has incident_key => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 0,
+);
+has description => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 0,
+);
 
 sub trigger {
-    my $self = shift;
+    my ( $self, %details ) = @_;
+
+    my $incident_key = $details{incident_key} || $self->incident_key || undef;
+    my $description  = $details{description}  || $self->description  || undef;
+
+    delete $details{incident_key};
+    delete $details{description};
+
+    die('WebService::PagerDuty::Event::trigger(): description is required') unless defined $description;
+
+    return WebService::PagerDuty::Request->post(
+        url         => $self->url,
+        service_key => $self->service_key,
+        event_type  => 'trigger',
+        description => $description,
+        ( $incident_key ? ( incident_key => $incident_key ) : () ),
+        ( %details      ? ( details      => \%details )     : () ),
+    );
 }
 
 sub acknowledge {
-    my $self = shift;
+    my ( $self, %details ) = @_;
+
+    my $incident_key = $details{incident_key} || $self->incident_key || undef;
+    my $description  = $details{description}  || $self->description  || undef;
+
+    delete $details{incident_key};
+    delete $details{description};
+
+    die('WebService::PagerDuty::Event::acknowledge(): incident_key is required') unless defined $incident_key;
+
+    return WebService::PagerDuty::Request->post(
+        url          => $self->url,
+        service_key  => $self->service_key,
+        event_type   => 'acknowledge',
+        incident_key => $incident_key,
+        ( $description ? ( description => $description ) : () ),
+        ( %details     ? ( details     => \%details )    : () ),
+    );
 }
 *ack = \&acknowledge;
 
 sub resolve {
-    my $self = shift;
+    my ( $self, %details ) = @_;
+
+    my $incident_key = $details{incident_key} || $self->incident_key || undef;
+    my $description  = $details{description}  || $self->description  || undef;
+
+    delete $details{incident_key};
+    delete $details{description};
+
+    die('WebService::PagerDuty::Event::resolve(): incident_key is required') unless defined $incident_key;
+
+    return WebService::PagerDuty::Request->post(
+        url          => $self->url,
+        service_key  => $self->service_key,
+        event_type   => 'resolve',
+        incident_key => $incident_key,
+        ( $description ? ( description => $description ) : () ),
+        ( %details     ? ( details     => \%details )    : () ),
+    );
 }
 
 no Any::Moose;

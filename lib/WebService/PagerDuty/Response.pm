@@ -5,8 +5,33 @@ use strict;
 use warnings;
 
 use Any::Moose;
-use URI;
+use JSON;
 
+has [qw/ code status message error data /] => ( is => 'ro', );
+
+sub BUILDARGS {
+    my ( $self, $response, $options ) = @_;
+    $options ||= {};
+
+    if ($response) {
+        $options->{code}    = $response->code();
+        $options->{status}  = $response->code();
+        $options->{message} = $response->message();
+        $options->{errors}  = undef;
+        $options->{data}    = decode_json( $response->content() );
+
+        $options->{status}  = delete $options->{data}{status}  if exists $options->{data}{status};
+        $options->{message} = delete $options->{data}{message} if exists $options->{data}{message};
+        $options->{error}   = delete $options->{data}{errors}  if exists $options->{data}{errors};
+    }
+    else {
+        $options->{code}    = 599;
+        $options->{status}  = 'invalid';
+        $options->{message} = $options->{error} = 'WebService::PagerDuty::Response was created incorrectly';
+    }
+
+    return $options;
+}
 
 no Any::Moose;
 

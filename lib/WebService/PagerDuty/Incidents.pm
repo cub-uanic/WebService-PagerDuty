@@ -24,13 +24,30 @@ has password => (
 );
 
 sub count {
-    my $self = shift;
+    my ( $self, %params ) = @_;
+
+    my $url = $self->url->clone;
+    $url->path( $url->path . "/count" );
+
+    return WebService::PagerDuty::Request->get(
+        url      => $url,
+        user     => $self->user,
+        password => $self->password,
+        params   => \%params,
+    );
 }
 
-sub list {
-    my $self = shift;
+sub query {
+    my ( $self, %params ) = @_;
+
+    return WebService::PagerDuty::Request->get(
+        url      => $self->url,
+        user     => $self->user,
+        password => $self->password,
+        params   => \%params,
+    );
 }
-*query = \&list;
+*list = \&query;
 
 no Any::Moose;
 
@@ -48,8 +65,8 @@ WebService::PagerDuty::Incidents - A incidents object
 
     my $incidents = $pager_duty->incidents( ... );
     $incidents->count();
-    $incidents->list();
-    $incidents->query(); # same as above, synonym
+    $incidents->query();
+    $incidents->list(); # same as above, synonym
 
 =head1 DESCRIPTION
 
