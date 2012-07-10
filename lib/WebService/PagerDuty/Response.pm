@@ -7,7 +7,14 @@ use warnings;
 use Any::Moose;
 use JSON;
 
-has [qw/ code status message error incident_key data /] => ( is => 'ro', );
+my @all_options = qw/
+  code status message error
+  incident_key
+  total limit offset
+  entries
+  data
+  /;
+has [@all_options] => ( is => 'ro', );
 
 sub BUILDARGS {
     my ( $self, $response, $options ) = @_;
@@ -20,10 +27,22 @@ sub BUILDARGS {
         $options->{errors}  = undef;
         $options->{data}    = decode_json( $response->content() );
 
-        $options->{status}       = delete $options->{data}{status}       if exists $options->{data}{status};
-        $options->{message}      = delete $options->{data}{message}      if exists $options->{data}{message};
-        $options->{error}        = delete $options->{data}{errors}       if exists $options->{data}{errors};
-        $options->{incident_key} = delete $options->{data}{incident_key} if exists $options->{data}{incident_key};
+        for my $option (@all_options) {
+            $options->{$option} = delete $options->{data}{$option} if exists $options->{data}{$option};
+        }
+
+        # one extra-case
+        $options->{entries} = delete $options->{data}{incidents} if exists $options->{data}{incidents};
+
+        # translate HTTP codes to human-readable status
+        if ( $options->{status} =~ /^(\d+)$/ ) {
+            if ( $1 eq '200' ) {
+                $options->{status} = 'success';
+            }
+            else {
+                $options->{status} = 'invalid';
+            }
+        }
     }
     else {
         $options->{code}    = 599;
