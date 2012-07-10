@@ -14,6 +14,8 @@ requires(
     'Class::Load'     => '0.19',
     'JSON'            => 0,
     'LWP::UserAgent'  => 0,
+    'URI'             => 0,
+    'URI::QueryParam' => 0,
 );
 
 recommends(

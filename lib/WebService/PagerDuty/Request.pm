@@ -8,6 +8,8 @@ use Any::Moose;
 use HTTP::Request;
 use LWP::UserAgent;
 use JSON;
+use URI;
+use URI::QueryParam;
 use Class::Load qw/ load_class /;
 
 has 'agent' => (
@@ -38,6 +40,8 @@ sub _perform_request {
     my $body     = {%args};
 
     die( 'Unknown method: ' . $method ) unless $method =~ m/^(get|post)$/io;
+
+    $url->query_form_hash($params) if $params && ref($params) && ref($params) eq 'HASH' && %$params;
 
     my $headers = HTTP::Headers->new;
     $headers->header( 'Content-Type' => 'application/json' ) if %$body;
