@@ -7,7 +7,7 @@ use warnings;
 use Any::Moose;
 use JSON;
 
-has [qw/ code status message error data /] => ( is => 'ro', );
+has [qw/ code status message error incident_key data /] => ( is => 'ro', );
 
 sub BUILDARGS {
     my ( $self, $response, $options ) = @_;
@@ -20,9 +20,10 @@ sub BUILDARGS {
         $options->{errors}  = undef;
         $options->{data}    = decode_json( $response->content() );
 
-        $options->{status}  = delete $options->{data}{status}  if exists $options->{data}{status};
-        $options->{message} = delete $options->{data}{message} if exists $options->{data}{message};
-        $options->{error}   = delete $options->{data}{errors}  if exists $options->{data}{errors};
+        $options->{status}       = delete $options->{data}{status}       if exists $options->{data}{status};
+        $options->{message}      = delete $options->{data}{message}      if exists $options->{data}{message};
+        $options->{error}        = delete $options->{data}{errors}       if exists $options->{data}{errors};
+        $options->{incident_key} = delete $options->{data}{incident_key} if exists $options->{data}{incident_key};
     }
     else {
         $options->{code}    = 599;
