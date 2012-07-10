@@ -1,7 +1,13 @@
 #!/usr/bion/env perl
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More;
+
+plan(
+      ( -e '.do_remote_testing' )
+    ? ( tests => 19 )
+    : ( skip_all => 'Do not run test thru network in non-author environment' )
+);
 
 use WebService::PagerDuty;
 use WebService::PagerDuty::Schedules;
