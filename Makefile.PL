@@ -10,9 +10,10 @@ all_from $main_module;
 repository 'http://github.com/cub-uanic/webservice-pagerduty';
 
 requires(
-    'Any::Moose'     => '0.16',
-    'JSON'           => 0,
-    'LWP::UserAgent' => 0,
+    'Any::Moose'      => '0.16',
+    'Class::Load'     => '0.19',
+    'JSON'            => 0,
+    'LWP::UserAgent'  => 0,
 );
 
 recommends(

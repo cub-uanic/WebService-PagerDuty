@@ -8,6 +8,7 @@ use Any::Moose;
 use HTTP::Request;
 use LWP::UserAgent;
 use JSON;
+use Class::Load qw/ load_class /;
 
 has 'agent' => (
     is      => 'ro',
@@ -48,6 +49,7 @@ sub _perform_request {
 
     my $response = $self->agent->request($request);
 
+    load_class('WebService::PagerDuty::Response');
     return WebService::PagerDuty::Response->new($response);
 }
 

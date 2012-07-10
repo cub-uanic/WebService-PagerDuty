@@ -6,6 +6,7 @@ use warnings;
 
 use Any::Moose;
 use URI;
+use Class::Load qw/ load_class /;
 
 our $VERSION = '0.01';
 
@@ -62,6 +63,7 @@ has schedules_url => (
 
 sub event {
     my $self = shift;
+    load_class('WebService::PagerDuty::Event');
     return WebService::PagerDuty::Event->new(
         url => $self->event_url,
         @_
@@ -70,6 +72,7 @@ sub event {
 
 sub incidents {
     my $self = shift;
+    load_class('WebService::PagerDuty::Incidents');
     return WebService::PagerDuty::Incidents->new(
         url      => $self->incidents_url,
         user     => $self->user,
@@ -80,6 +83,7 @@ sub incidents {
 
 sub schedules {
     my $self = shift;
+    load_class('WebService::PagerDuty::Schedules');
     return WebService::PagerDuty::Schedules->new(
         url      => $self->schedules_url,
         user     => $self->user,

@@ -6,6 +6,7 @@ use warnings;
 
 use Any::Moose;
 use URI;
+use Class::Load qw/ load_class /;
 
 has url => (
     is       => 'ro',
@@ -26,6 +27,7 @@ has password => (
 sub entries {
     my ( $self, %params ) = @_;
 
+    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->get(
         url      => $self->url,
         user     => $self->user,
