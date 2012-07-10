@@ -37,6 +37,7 @@ has event_url => (
     is       => 'ro',
     isa      => 'URI',
     required => 0,
+    lazy     => 1,
     default  => sub {
         my $self = shift;
         URI->new( ( $self->use_ssl ? 'https' : 'http' ) . '://events.pagerduty.com/generic/2010-04-15/create_event.json' );
@@ -46,6 +47,7 @@ has incidents_url => (
     is       => 'ro',
     isa      => 'URI',
     required => 0,
+    lazy     => 1,
     default  => sub {
         my $self = shift;
         URI->new( 'https://' . $self->subdomain . '.pagerduty.com/api/v1/incidents' );
@@ -55,6 +57,7 @@ has schedules_url => (
     is       => 'ro',
     isa      => 'URI',
     required => 0,
+    lazy     => 1,
     default  => sub {
         my $self = shift;
         URI->new( 'https://' . $self->subdomain . '.pagerduty.com/api/v1/schedules' );

@@ -13,6 +13,7 @@ use Class::Load qw/ load_class /;
 has 'agent' => (
     is      => 'ro',
     isa     => 'Object',
+    lazy    => 1,
     default => sub { LWP::UserAgent->new }
 );
 
