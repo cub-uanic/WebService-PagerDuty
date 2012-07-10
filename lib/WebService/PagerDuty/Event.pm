@@ -41,7 +41,7 @@ sub trigger {
     die('WebService::PagerDuty::Event::trigger(): description is required') unless defined $description;
 
     load_class('WebService::PagerDuty::Request');
-    return WebService::PagerDuty::Request->post(
+    return WebService::PagerDuty::Request->new->post(
         url         => $self->url,
         service_key => $self->service_key,
         event_type  => 'trigger',
@@ -63,7 +63,7 @@ sub acknowledge {
     die('WebService::PagerDuty::Event::acknowledge(): incident_key is required') unless defined $incident_key;
 
     load_class('WebService::PagerDuty::Request');
-    return WebService::PagerDuty::Request->post(
+    return WebService::PagerDuty::Request->new->post(
         url          => $self->url,
         service_key  => $self->service_key,
         event_type   => 'acknowledge',
@@ -86,7 +86,7 @@ sub resolve {
     die('WebService::PagerDuty::Event::resolve(): incident_key is required') unless defined $incident_key;
 
     load_class('WebService::PagerDuty::Request');
-    return WebService::PagerDuty::Request->post(
+    return WebService::PagerDuty::Request->new->post(
         url          => $self->url,
         service_key  => $self->service_key,
         event_type   => 'resolve',

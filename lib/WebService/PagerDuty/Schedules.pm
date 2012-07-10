@@ -28,7 +28,7 @@ sub entries {
     my ( $self, %params ) = @_;
 
     load_class('WebService::PagerDuty::Request');
-    return WebService::PagerDuty::Request->get(
+    return WebService::PagerDuty::Request->new->get(
         url      => $self->url,
         user     => $self->user,
         password => $self->password,
