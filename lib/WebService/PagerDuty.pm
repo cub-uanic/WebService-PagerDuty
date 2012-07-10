@@ -107,37 +107,75 @@ WebService::PagerDuty - Module to interface with the http://PagerDuty.com servic
 
 =head1 SYNOPSIS
 
-    my $pager_duty = WebService::PagerDuty->new(
-        use_ssl     => 1,
+    # for Events API, all parameters are optional
+    my $pager_duty = WebService::PagerDuty->new();
+
+
+    # for Incidents API and Schedules API, these are mandatory
+    my $pager_duty2 = WebService::PagerDuty->new(
         user        => 'test_user',
         password    => 'test_password',
         subdomain   => 'test-sub-domain',
+        # always optional, true by default
+        use_ssl     => 1,
     );
 
-    my $event = $pager_duty->event( ... );
-    $event->trigger( ... );
-    $event->acknowledge( ... );
-    $event->resolve( ... );
+    # if you want to get access to all three APIs via
+    # same $pager_duty variable, then use second form
 
-    my $incidents = $pager_duty->incidents( ... );
-    $incidents->count();
-    $incidents->list();
 
-    my $schedules = $pager_duty->schedules( ... );
-    $schedules->entries(
+    #
+    # Events API
+    #
+    my $event = $pager_duty->event(
+         service_key  => ... , # required
+         incident_key => ... , # optional
+         %extra_params,
+    );
+    $event->trigger( %extra_params );
+    $event->acknowledge( %extra_params );
+    $event->resolve( %extra_params );
+
+    #
+    # Incidents API
+    #
+    my $incidents = $pager_duty->incidents();
+    $incidents->count( %extra_params );
+    $incidents->list( %extra_params );
+
+    #
+    # Schedules API
+    #
+    my $schedules = $pager_duty->schedules();
+    $schedules->list(
         schedule_id => ... ,
         since       => 'ISO8601date',
         until       => 'ISO8601date',
-        ...
+        %extra_params,
     );
 
 =head1 DESCRIPTION
 
 WebService::PagerDuty - is a client library for http://PagerDuty.com
 
+For detailed description of B<%extra_params> (including which of them are
+required or optional), see PagerDuty site:
+
+=over 4
+
+=item L<Events API|http://www.pagerduty.com/docs/integration-api/integration-api-documentation>
+
+=item L<Incidents API|http://www.pagerduty.com/docs/rest-api/incidents>
+
+=item L<Schedules API|http://www.pagerduty.com/docs/rest-api/schedules>
+
+=back
+
+Also, you could explore tests in t/ directory of distribution archive.
+
 =head1 SEE ALSO
 
-L<http://PagerDuty.com>, L<oDesk.com>
+L<http://PagerDuty.com>, L<http://oDesk.com>
 
 =head1 AUTHOR
 
@@ -145,7 +183,19 @@ Oleg Kostyuk (cubuanic), C<< <cub@cpan.org> >>
 
 =head1 LICENSE
 
+Same as Perl.
+
+=head1 COPYRIGHT
+
 Copyright E<copy> oDesk Inc., 2012
+
+All development sponsored by oDesk.
+
+=head1 NO WARRANTY
+
+This software is provided "as-is," without any express or implied warranty.
+In no event shall the author or sponsor be held liable for any damages
+arising from the use of the software.
 
 =cut
 
