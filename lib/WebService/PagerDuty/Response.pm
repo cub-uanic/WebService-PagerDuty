@@ -6,6 +6,7 @@ use warnings;
 
 use Any::Moose;
 use JSON;
+use Try::Tiny;
 
 my @all_options = qw/
   code status message error
@@ -22,10 +23,21 @@ sub BUILDARGS {
 
     if ($response) {
         $options->{code}    = $response->code();
-        $options->{status}  = $response->code();
+        $options->{status}  = $response->status_line();
         $options->{message} = $response->message();
         $options->{errors}  = undef;
-        $options->{data}    = decode_json( $response->content() );
+
+        try {
+            $options->{data} = decode_json( $response->content() ) if $response->content();
+        }
+        catch {
+            # the only error that could happen and we care of - it's when $response->content can't
+            # be parsed as json (no difference why - because of bad request or something else)
+            $options->{data} = {
+                status  => 'invalid',
+                message => $_,
+            };
+        };
 
         for my $option (@all_options) {
             $options->{$option} = delete $options->{data}{$option} if exists $options->{data}{$option};
@@ -35,7 +47,7 @@ sub BUILDARGS {
         $options->{entries} = delete $options->{data}{incidents} if exists $options->{data}{incidents};
 
         # translate HTTP codes to human-readable status
-        if ( $options->{status} =~ /^(\d+)$/ ) {
+        if ( $options->{status} =~ /^(\d+)/ ) {
             if ( $1 eq '200' ) {
                 $options->{status} = 'success';
             }
@@ -43,6 +55,9 @@ sub BUILDARGS {
                 $options->{status} = 'invalid';
             }
         }
+
+        # eliminate uneeded fields
+        delete $options->{data} unless %{ $options->{data} };
     }
     else {
         $options->{code}    = 599;
