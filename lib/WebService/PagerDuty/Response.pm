@@ -9,7 +9,7 @@ use warnings;
 
 use Mouse;
 use JSON;
-use Try::Tiny;
+use Error qw/ :try /;
 
 my @all_options = qw/
   code status message error
@@ -33,9 +33,9 @@ sub BUILDARGS {
         try {
             $options->{data} = decode_json( $response->content() ) if $response->content();
         }
-        catch {
-            # the only error that could happen and we care of - it's when $response->content can't
-            # be parsed as json (no difference why - because of bad request or something else)
+        catch Error with {
+            ## the only error that could happen and we care of - it's when $response->content can't
+            ## be parsed as json (no difference why - because of bad request or something else)
             $options->{data} = {
                 status  => 'invalid',
                 message => $_,
