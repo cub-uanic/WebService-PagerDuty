@@ -6,7 +6,7 @@ use warnings;
 
 use Any::Moose;
 use URI;
-use Class::Load qw/ load_class /;
+use WebService::PagerDuty::Request;
 
 has url => (
     is       => 'ro',
@@ -40,7 +40,6 @@ sub trigger {
 
     die('WebService::PagerDuty::Event::trigger(): description is required') unless defined $description;
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->post(
         url         => $self->url,
         service_key => $self->service_key,
@@ -62,7 +61,6 @@ sub acknowledge {
 
     die('WebService::PagerDuty::Event::acknowledge(): incident_key is required') unless defined $incident_key;
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->post(
         url          => $self->url,
         service_key  => $self->service_key,
@@ -85,7 +83,6 @@ sub resolve {
 
     die('WebService::PagerDuty::Event::resolve(): incident_key is required') unless defined $incident_key;
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->post(
         url          => $self->url,
         service_key  => $self->service_key,

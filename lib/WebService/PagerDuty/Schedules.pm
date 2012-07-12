@@ -6,7 +6,7 @@ use warnings;
 
 use Any::Moose;
 use URI;
-use Class::Load qw/ load_class /;
+use WebService::PagerDuty::Request;
 
 has url => (
     is       => 'ro',
@@ -34,7 +34,6 @@ sub entries {
 
     die('WebService::PagerDuty::Schedules::entries(): id or schedule_id is required') unless defined $id;
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->get(
         url      => URI->new( $self->url . '/' . $id . '/entries' ),
         user     => $self->user,

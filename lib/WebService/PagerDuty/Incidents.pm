@@ -6,7 +6,7 @@ use warnings;
 
 use Any::Moose;
 use URI;
-use Class::Load qw/ load_class /;
+use WebService::PagerDuty::Request;
 
 has url => (
     is       => 'ro',
@@ -30,7 +30,6 @@ sub count {
     my $url = $self->url->clone;
     $url->path( $url->path . "/count" );
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->get(
         url      => $url,
         user     => $self->user,
@@ -42,7 +41,6 @@ sub count {
 sub query {
     my ( $self, %params ) = @_;
 
-    load_class('WebService::PagerDuty::Request');
     return WebService::PagerDuty::Request->new->get(
         url      => $self->url,
         user     => $self->user,

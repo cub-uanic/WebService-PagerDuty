@@ -10,7 +10,7 @@ use LWP::UserAgent;
 use JSON;
 use URI;
 use URI::QueryParam;
-use Class::Load qw/ load_class /;
+use WebService::PagerDuty::Response;
 
 has 'agent' => (
     is      => 'ro',
@@ -54,7 +54,6 @@ sub _perform_request {
 
     my $response = $self->agent->request($request);
 
-    load_class('WebService::PagerDuty::Response');
     return WebService::PagerDuty::Response->new($response);
 }
 
