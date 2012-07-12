@@ -8,7 +8,7 @@ use Any::Moose;
 use URI;
 use Class::Load qw/ load_class /;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has user => (
     is       => 'ro',
