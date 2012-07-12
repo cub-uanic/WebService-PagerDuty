@@ -148,9 +148,9 @@ WebService::PagerDuty - Module to interface with the http://PagerDuty.com servic
     #
     my $schedules = $pager_duty->schedules();
     $schedules->list(
-        schedule_id => ... ,
-        since       => 'ISO8601date',
-        until       => 'ISO8601date',
+        schedule_id => ... ,            # required
+        since       => 'ISO8601date',   # required
+        until       => 'ISO8601date',   # required
         %extra_params,
     );
 
@@ -196,6 +196,14 @@ All development sponsored by oDesk.
 This software is provided "as-is," without any express or implied warranty.
 In no event shall the author or sponsor be held liable for any damages
 arising from the use of the software.
+
+=begin Pod::Coverage
+
+    event
+    incidents
+    schedules
+
+=end Pod::Coverage
 
 =cut
 

@@ -108,5 +108,14 @@ Copyright by oDesk Inc., 2012
 
 All development sponsored by oDesk.
 
+=begin Pod::Coverage
+
+    trigger
+    acknowledge
+    ack
+    resolve
+
+=end Pod::Coverage
+
 =cut
 

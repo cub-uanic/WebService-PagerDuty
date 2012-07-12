@@ -79,5 +79,12 @@ Copyright by oDesk Inc., 2012
 
 All development sponsored by oDesk.
 
+=begin Pod::Coverage
+
+    entries
+    list
+
+=end Pod::Coverage
+
 =cut
 

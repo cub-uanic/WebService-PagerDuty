@@ -92,5 +92,12 @@ Copyright by oDesk Inc., 2012
 
 All development sponsored by oDesk.
 
+=begin Pod::Coverage
+
+    get
+    post
+
+=end Pod::Coverage
+
 =cut
 
