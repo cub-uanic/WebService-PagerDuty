@@ -30,11 +30,8 @@ has password => (
 sub count {
     my ( $self, %params ) = @_;
 
-    my $url = $self->url->clone;
-    $url->path( $url->path . "/count" );
-
     return WebService::PagerDuty::Request->new->get(
-        url      => $url,
+        url      => URI->new( $self->url . '/count' ),
         user     => $self->user,
         password => $self->password,
         params   => \%params,

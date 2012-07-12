@@ -32,68 +32,41 @@ has description => (
     required => 0,
 );
 
-sub trigger {
-    my ( $self, %details ) = @_;
+my @__method_definitions = (
+    ## method_name => required_arg  ],
+    [ trigger     => 'description' ],
+    [ acknowledge => 'incident_key' ],
+    [ resolve     => 'incident_key' ],
+);
 
-    my $incident_key = $details{incident_key} || $self->incident_key || undef;
-    my $description  = $details{description}  || $self->description  || undef;
-
-    delete $details{incident_key};
-    delete $details{description};
-
-    die('WebService::PagerDuty::Event::trigger(): description is required') unless defined $description;
-
-    return WebService::PagerDuty::Request->new->post(
-        url         => $self->url,
-        service_key => $self->service_key,
-        event_type  => 'trigger',
-        description => $description,
-        ( $incident_key ? ( incident_key => $incident_key ) : () ),
-        ( %details      ? ( details      => \%details )     : () ),
-    );
-}
-
-sub acknowledge {
-    my ( $self, %details ) = @_;
-
-    my $incident_key = $details{incident_key} || $self->incident_key || undef;
-    my $description  = $details{description}  || $self->description  || undef;
-
-    delete $details{incident_key};
-    delete $details{description};
-
-    die('WebService::PagerDuty::Event::acknowledge(): incident_key is required') unless defined $incident_key;
-
-    return WebService::PagerDuty::Request->new->post(
-        url          => $self->url,
-        service_key  => $self->service_key,
-        event_type   => 'acknowledge',
-        incident_key => $incident_key,
-        ( $description ? ( description => $description ) : () ),
-        ( %details     ? ( details     => \%details )    : () ),
-    );
-}
+__construct_method(@$_) for @__method_definitions;
 *ack = \&acknowledge;
 
-sub resolve {
-    my ( $self, %details ) = @_;
+sub __construct_method {
+    my ( $method_name, $required_arg ) = @_;
 
-    my $incident_key = $details{incident_key} || $self->incident_key || undef;
-    my $description  = $details{description}  || $self->description  || undef;
+    no strict 'refs';    ## no critic
 
-    delete $details{incident_key};
-    delete $details{description};
+    my $method = 'sub {
+        my ( $self, %details ) = @_;
 
-    die('WebService::PagerDuty::Event::resolve(): incident_key is required') unless defined $incident_key;
+        my $incident_key = delete $details{incident_key} || $self->incident_key || undef;
+        my $description  = delete $details{description}  || $self->description  || undef;
 
-    return WebService::PagerDuty::Request->new->post(
-        url          => $self->url,
-        service_key  => $self->service_key,
-        event_type   => 'resolve',
-        incident_key => $incident_key,
-        ( $description ? ( description => $description ) : () ),
-        ( %details     ? ( details     => \%details )    : () ),
-    );
+        die("WebService::PagerDuty::Event::' . $method_name . '(): ' . $required_arg . ' is required")
+            unless defined \$' . $required_arg . ';
+
+        return WebService::PagerDuty::Request->new->post(
+            url         => $self->url,
+            event_type  => "' . $method_name . '",
+            service_key => $self->service_key,
+            ( $description  ? ( description  => $description )  : () ),
+            ( $incident_key ? ( incident_key => $incident_key ) : () ),
+            ( %details      ? ( details      => \%details )     : () ),
+        );
+    }';
+
+    *$method_name = eval $method;    ## no critic
 }
 
 no Mouse;

@@ -30,10 +30,7 @@ has password => (
 sub entries {
     my ( $self, %params ) = @_;
 
-    my $id = $params{id} || $params{schedule_id} || undef;
-
-    delete $params{id};
-    delete $params{schedule_id};
+    my $id = delete $params{id} || delete $params{schedule_id} || undef;
 
     die('WebService::PagerDuty::Schedules::entries(): id or schedule_id is required') unless defined $id;
 
