@@ -185,7 +185,7 @@ Same as Perl.
 
 =head1 COPYRIGHT
 
-Copyright E<copy> oDesk Inc., 2012
+Copyright by oDesk Inc., 2012
 
 All development sponsored by oDesk.
 

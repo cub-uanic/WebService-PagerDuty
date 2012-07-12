@@ -76,7 +76,9 @@ Oleg Kostyuk (cubuanic), C<< <cub@cpan.org> >>
 
 =head1 LICENSE
 
-Copyright E<copy> oDesk Inc., 2012
+Copyright by oDesk Inc., 2012
+
+All development sponsored by oDesk.
 
 =cut
 
