@@ -4,7 +4,7 @@ package WebService::PagerDuty::Schedules;
 use strict;
 use warnings;
 
-use Any::Moose;
+use Mouse;
 use URI;
 use WebService::PagerDuty::Request;
 
@@ -43,7 +43,7 @@ sub entries {
 }
 *list = \&entries;
 
-no Any::Moose;
+no Mouse;
 
 __PACKAGE__->meta->make_immutable;
 

@@ -4,7 +4,7 @@ package WebService::PagerDuty::Response;
 use strict;
 use warnings;
 
-use Any::Moose;
+use Mouse;
 use JSON;
 use Try::Tiny;
 
@@ -68,7 +68,7 @@ sub BUILDARGS {
     return $options;
 }
 
-no Any::Moose;
+no Mouse;
 
 __PACKAGE__->meta->make_immutable;
 

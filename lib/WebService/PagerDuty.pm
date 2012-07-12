@@ -4,7 +4,7 @@ package WebService::PagerDuty;
 use strict;
 use warnings;
 
-use Any::Moose;
+use Mouse;
 use URI;
 use WebService::PagerDuty::Event;
 use WebService::PagerDuty::Incidents;
@@ -92,7 +92,7 @@ sub schedules {
     );
 }
 
-no Any::Moose;
+no Mouse;
 
 __PACKAGE__->meta->make_immutable;
 

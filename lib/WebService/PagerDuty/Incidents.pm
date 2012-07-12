@@ -4,7 +4,7 @@ package WebService::PagerDuty::Incidents;
 use strict;
 use warnings;
 
-use Any::Moose;
+use Mouse;
 use URI;
 use WebService::PagerDuty::Request;
 
@@ -50,7 +50,7 @@ sub query {
 }
 *list = \&query;
 
-no Any::Moose;
+no Mouse;
 
 __PACKAGE__->meta->make_immutable;
 

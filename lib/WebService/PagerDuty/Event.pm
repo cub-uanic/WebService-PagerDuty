@@ -4,7 +4,7 @@ package WebService::PagerDuty::Event;
 use strict;
 use warnings;
 
-use Any::Moose;
+use Mouse;
 use URI;
 use WebService::PagerDuty::Request;
 
@@ -93,7 +93,7 @@ sub resolve {
     );
 }
 
-no Any::Moose;
+no Mouse;
 
 __PACKAGE__->meta->make_immutable;
 
