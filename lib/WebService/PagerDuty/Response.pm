@@ -1,6 +1,9 @@
 #!/usr/bin/env perl -w
 
+## workaround for PkgVersion
+## no critic
 package WebService::PagerDuty::Response;
+## use critic
 use strict;
 use warnings;
 
