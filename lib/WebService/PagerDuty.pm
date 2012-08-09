@@ -7,7 +7,7 @@ package WebService::PagerDuty;
 use strict;
 use warnings;
 
-use Mouse;
+use Moo;
 use URI;
 use WebService::PagerDuty::Event;
 use WebService::PagerDuty::Incidents;
@@ -15,30 +15,25 @@ use WebService::PagerDuty::Schedules;
 
 has user => (
     is       => 'ro',
-    isa      => 'Str',
     required => 0,
 );
 has password => (
     is       => 'ro',
-    isa      => 'Str',
     required => 0,
 );
 has subdomain => (
     is       => 'ro',
-    isa      => 'Str',
     required => 0,
 );
 
 has use_ssl => (
     is       => 'ro',
-    isa      => 'Bool',
     required => 0,
-    default  => 1,
+    default  => sub { 1 },
 );
 
 has event_url => (
     is       => 'ro',
-    isa      => 'URI',
     required => 0,
     lazy     => 1,
     default  => sub {
@@ -48,7 +43,6 @@ has event_url => (
 );
 has incidents_url => (
     is       => 'ro',
-    isa      => 'URI',
     required => 0,
     lazy     => 1,
     default  => sub {
@@ -58,7 +52,6 @@ has incidents_url => (
 );
 has schedules_url => (
     is       => 'ro',
-    isa      => 'URI',
     required => 0,
     lazy     => 1,
     default  => sub {
@@ -94,10 +87,6 @@ sub schedules {
         @_
     );
 }
-
-no Mouse;
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

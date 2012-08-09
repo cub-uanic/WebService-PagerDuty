@@ -7,7 +7,7 @@ package WebService::PagerDuty::Request;
 use strict;
 use warnings;
 
-use Mouse;
+use Moo;
 use HTTP::Request;
 use LWP::UserAgent;
 use JSON;
@@ -17,7 +17,6 @@ use WebService::PagerDuty::Response;
 
 has 'agent' => (
     is      => 'ro',
-    isa     => 'Object',
     lazy    => 1,
     default => sub { LWP::UserAgent->new }
 );
@@ -59,10 +58,6 @@ sub _perform_request {
 
     return WebService::PagerDuty::Response->new($response);
 }
-
-no Mouse;
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

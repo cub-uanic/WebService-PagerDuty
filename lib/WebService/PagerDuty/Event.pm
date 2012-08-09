@@ -7,28 +7,24 @@ package WebService::PagerDuty::Event;
 use strict;
 use warnings;
 
-use Mouse;
+use Moo;
 use URI;
 use WebService::PagerDuty::Request;
 
 has url => (
     is       => 'ro',
-    isa      => 'URI',
     required => 1,
 );
 has service_key => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
 has incident_key => (
     is       => 'ro',
-    isa      => 'Str',
     required => 0,
 );
 has description => (
     is       => 'ro',
-    isa      => 'Str',
     required => 0,
 );
 
@@ -68,10 +64,6 @@ sub __construct_method {
 
     *$method_name = eval $method;    ## no critic
 }
-
-no Mouse;
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

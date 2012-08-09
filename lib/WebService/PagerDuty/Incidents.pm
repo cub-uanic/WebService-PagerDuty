@@ -7,23 +7,20 @@ package WebService::PagerDuty::Incidents;
 use strict;
 use warnings;
 
-use Mouse;
+use Moo;
 use URI;
 use WebService::PagerDuty::Request;
 
 has url => (
     is       => 'ro',
-    isa      => 'URI',
     required => 1,
 );
 has user => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
 has password => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
 
@@ -49,10 +46,6 @@ sub query {
     );
 }
 *list = \&query;
-
-no Mouse;
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

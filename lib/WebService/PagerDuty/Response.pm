@@ -7,9 +7,9 @@ package WebService::PagerDuty::Response;
 use strict;
 use warnings;
 
-use Mouse;
+use Moo;
 use JSON;
-use Error qw/ :try /;
+use Try::Tiny;
 
 my @all_options = qw/
   code status message error
@@ -18,7 +18,7 @@ my @all_options = qw/
   entries
   data
   /;
-has [@all_options] => ( is => 'ro', );
+has $_ => ( is => 'ro', ) for @all_options;
 
 sub BUILDARGS {
     my ( $self, $response, $options ) = @_;
@@ -33,7 +33,7 @@ sub BUILDARGS {
         try {
             $options->{data} = decode_json( $response->content() ) if $response->content();
         }
-        catch Error with {
+        catch {
             ## the only error that could happen and we care of - it's when $response->content can't
             ## be parsed as json (no difference why - because of bad request or something else)
             $options->{data} = {
@@ -71,10 +71,6 @@ sub BUILDARGS {
     return $options;
 }
 
-no Mouse;
-
-__PACKAGE__->meta->make_immutable;
-
 1;
 
 =head1 NAME
@@ -102,6 +98,12 @@ Oleg Kostyuk (cubuanic), C<< <cub@cpan.org> >>
 Copyright by oDesk Inc., 2012
 
 All development sponsored by oDesk.
+
+=begin Pod::Coverage
+
+    BUILDARGS
+
+=end Pod::Coverage
 
 =cut
 
