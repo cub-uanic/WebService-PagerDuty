@@ -7,7 +7,7 @@ package WebService::PagerDuty::Request;
 use strict;
 use warnings;
 
-use Moo;
+use base qw/ WebService::PagerDuty::Base /;
 use HTTP::Request;
 use LWP::UserAgent;
 use JSON;
@@ -15,18 +15,26 @@ use URI;
 use URI::QueryParam;
 use WebService::PagerDuty::Response;
 
-has 'agent' => (
-    is      => 'ro',
-    lazy    => 1,
-    default => sub { LWP::UserAgent->new }
-);
+__PACKAGE__->mk_ro_accessors(qw/ agent /);
 
-sub get {
+sub new {
+    my $self = shift;
+    $self->SUPER::new(
+        _defaults => {
+            agent => sub {
+                LWP::UserAgent->new;
+            },
+        },
+        @_
+    );
+}
+
+sub get_data {
     my $self = shift;
     return $self->_perform_request( method => 'GET', @_ );
 }
 
-sub post {
+sub post_data {
     my $self = shift;
     return $self->_perform_request( method => 'POST', @_ );
 }
@@ -50,7 +58,7 @@ sub _perform_request {
     $headers->authorization_basic( $user, $password ) if $user && $password;
 
     my $content = '';
-    $content = encode_json($body) if %$body;
+    $content = objToJson($body) if %$body;
 
     my $request = HTTP::Request->new( $method, $url, $headers, $content );
 
@@ -67,7 +75,8 @@ WebService::PagerDuty::Request - Aux object to perform HTTP requests.
 
 =head1 SYNOPSIS
 
-    my $response = WebService::PagerDuty::Request->post( ... );
+    my $response = WebService::PagerDuty::Request->get_data( ... );
+    my $response = WebService::PagerDuty::Request->post_data( ... );
 
 =head1 DESCRIPTION
 
@@ -89,8 +98,8 @@ All development sponsored by oDesk.
 
 =begin Pod::Coverage
 
-    get
-    post
+    get_data
+    post_data
 
 =end Pod::Coverage
 

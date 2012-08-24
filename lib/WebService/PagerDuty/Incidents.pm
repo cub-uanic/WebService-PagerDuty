@@ -7,27 +7,22 @@ package WebService::PagerDuty::Incidents;
 use strict;
 use warnings;
 
-use Moo;
+use base qw/ WebService::PagerDuty::Base /;
 use URI;
 use WebService::PagerDuty::Request;
 
-has url => (
-    is       => 'ro',
-    required => 1,
-);
-has user => (
-    is       => 'ro',
-    required => 1,
-);
-has password => (
-    is       => 'ro',
-    required => 1,
+__PACKAGE__->mk_ro_accessors(
+    qw/
+      url
+      user
+      password
+      /
 );
 
 sub count {
     my ( $self, %params ) = @_;
 
-    return WebService::PagerDuty::Request->new->get(
+    return WebService::PagerDuty::Request->new->get_data(
         url      => URI->new( $self->url . '/count' ),
         user     => $self->user,
         password => $self->password,
@@ -38,7 +33,7 @@ sub count {
 sub query {
     my ( $self, %params ) = @_;
 
-    return WebService::PagerDuty::Request->new->get(
+    return WebService::PagerDuty::Request->new->get_data(
         url      => $self->url,
         user     => $self->user,
         password => $self->password,

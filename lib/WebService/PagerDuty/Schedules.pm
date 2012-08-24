@@ -7,21 +7,16 @@ package WebService::PagerDuty::Schedules;
 use strict;
 use warnings;
 
-use Moo;
+use base qw/ WebService::PagerDuty::Base /;
 use URI;
 use WebService::PagerDuty::Request;
 
-has url => (
-    is       => 'ro',
-    required => 1,
-);
-has user => (
-    is       => 'ro',
-    required => 1,
-);
-has password => (
-    is       => 'ro',
-    required => 1,
+__PACKAGE__->mk_ro_accessors(
+    qw/
+      url
+      user
+      password
+      /
 );
 
 sub entries {
@@ -31,7 +26,7 @@ sub entries {
 
     die('WebService::PagerDuty::Schedules::entries(): id or schedule_id is required') unless defined $id;
 
-    return WebService::PagerDuty::Request->new->get(
+    return WebService::PagerDuty::Request->new->get_data(
         url      => URI->new( $self->url . '/' . $id . '/entries' ),
         user     => $self->user,
         password => $self->password,

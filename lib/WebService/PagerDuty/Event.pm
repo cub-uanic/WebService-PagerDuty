@@ -7,25 +7,17 @@ package WebService::PagerDuty::Event;
 use strict;
 use warnings;
 
-use Moo;
+use base qw/ WebService::PagerDuty::Base /;
 use URI;
 use WebService::PagerDuty::Request;
 
-has url => (
-    is       => 'ro',
-    required => 1,
-);
-has service_key => (
-    is       => 'ro',
-    required => 1,
-);
-has incident_key => (
-    is       => 'ro',
-    required => 0,
-);
-has description => (
-    is       => 'ro',
-    required => 0,
+__PACKAGE__->mk_ro_accessors(
+    qw/
+      url
+      service_key
+      incident_key
+      description
+      /
 );
 
 my @__method_definitions = (
@@ -52,7 +44,7 @@ sub __construct_method {
         die("WebService::PagerDuty::Event::' . $method_name . '(): ' . $required_arg . ' is required")
             unless defined \$' . $required_arg . ';
 
-        return WebService::PagerDuty::Request->new->post(
+        return WebService::PagerDuty::Request->new->post_data(
             url         => $self->url,
             event_type  => "' . $method_name . '",
             service_key => $self->service_key,

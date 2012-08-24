@@ -7,9 +7,9 @@ package WebService::PagerDuty::Response;
 use strict;
 use warnings;
 
-use Moo;
+use base qw/ WebService::PagerDuty::Base /;
 use JSON;
-use Try::Tiny;
+use Error qw/ :try /;
 
 my @all_options = qw/
   code status message error
@@ -18,9 +18,10 @@ my @all_options = qw/
   entries
   data
   /;
-has $_ => ( is => 'ro', ) for @all_options;
 
-sub BUILDARGS {
+__PACKAGE__->mk_ro_accessors(@all_options);
+
+sub new {
     my ( $self, $response, $options ) = @_;
     $options ||= {};
 
@@ -31,9 +32,10 @@ sub BUILDARGS {
         $options->{errors}  = undef;
 
         try {
-            $options->{data} = decode_json( $response->content() ) if $response->content();
+            $options->{data} = jsonToObj( $response->content() ) if $response->content();
         }
-        catch {
+        otherwise {
+            my $error = shift;
             ## the only error that could happen and we care of - it's when $response->content can't
             ## be parsed as json (no difference why - because of bad request or something else)
             $options->{data} = {
@@ -68,7 +70,7 @@ sub BUILDARGS {
         $options->{message} = $options->{error} = 'WebService::PagerDuty::Response was created incorrectly';
     }
 
-    return $options;
+    $self->SUPER::new(%$options);
 }
 
 1;
@@ -79,7 +81,7 @@ WebService::PagerDuty::Response - Aux object to represent PagerDuty responses.
 
 =head1 SYNOPSIS
 
-    my $response = WebService::PagerDuty::Request->post( ... );
+    my $response = WebService::PagerDuty::Response->new( ... );
 
 =head1 DESCRIPTION
 
@@ -101,7 +103,7 @@ All development sponsored by oDesk.
 
 =begin Pod::Coverage
 
-    BUILDARGS
+    new
 
 =end Pod::Coverage
 
