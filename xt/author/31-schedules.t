@@ -1,32 +1,44 @@
 #!/usr/bion/env perl
 use strict;
 use warnings;
+use lib './t/lib';
 use Test::More tests => 19;
+use POSIX qw/ strftime /;
 
 use WebService::PagerDuty;
 use WebService::PagerDuty::Schedules;
 use WebService::PagerDuty::Response;
 
+do 'config.pl';
+our $pd_subdomain;
+our $pd_user;
+our $pd_password;
+our $pd_schedule_id;
+
 my $pager_duty = WebService::PagerDuty->new(
-    subdomain => 'cub-uanic-odesk',
-    user      => 'cub-uanic@odesk.com',
-    password  => '8uRwyHTqAP_ms88_8I7x1wuS',
+    subdomain => $pd_subdomain,
+    user      => $pd_user,
+    password  => $pd_password,
 );
+
 isa_ok( $pager_duty, 'WebService::PagerDuty', 'Created WebService::PagerDuty object have correct class' );
-is( $pager_duty->subdomain, 'cub-uanic-odesk',          'Subdomain in PagerDuty object is correct' );
-is( $pager_duty->user,      'cub-uanic@odesk.com',      'User in PagerDuty object is correct' );
-is( $pager_duty->password,  '8uRwyHTqAP_ms88_8I7x1wuS', 'Password in PagerDuty object is correct' );
+is( $pager_duty->subdomain, $pd_subdomain, 'Subdomain in PagerDuty object is correct' );
+is( $pager_duty->user,      $pd_user,      'User in PagerDuty object is correct' );
+is( $pager_duty->password,  $pd_password,  'Password in PagerDuty object is correct' );
 
 my $schedules = $pager_duty->schedules();
 isa_ok( $schedules, 'WebService::PagerDuty::Schedules', 'Created WebService::PagerDuty::Schedules object have correct class' );
 ok( $schedules->url, 'URL in Schedules object is not empty' );
-is( $schedules->user,     'cub-uanic@odesk.com',      'User in Schedules object is correct' );
-is( $schedules->password, '8uRwyHTqAP_ms88_8I7x1wuS', 'Password in Schedules object is correct' );
+is( $schedules->user,     $pd_user,     'User in Schedules object is correct' );
+is( $schedules->password, $pd_password, 'Password in Schedules object is correct' );
+
+my $since = `date --date '-1 month' '+%Y-%m-%dT00:00Z'`;    # ISO 8601 required
+my $until = `date --date '+1 month' '+%Y-%m-%dT00:00Z'`;    # ISO 8601 required
 
 my $list = $schedules->list(
-    schedule_id => 'PODUVNC',
-    since       => '2012-07-09T00:00Z',    # ISO 8601 required
-    until       => '2012-07-11T00:00Z',    # ISO 8601 required
+    schedule_id => $pd_schedule_id,
+    since       => $since,
+    until       => $until,
 );
 ok( $list, 'We got non-empty response (list)' );
 isa_ok( $list, 'WebService::PagerDuty::Response', 'Returned WebService::PagerDuty::Response object have correct class (list)' );

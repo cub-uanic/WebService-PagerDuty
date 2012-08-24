@@ -1,6 +1,7 @@
 #!/usr/bion/env perl
 use strict;
 use warnings;
+use lib './t/lib';
 use Test::More tests => 7;
 
 use WebService::PagerDuty;
