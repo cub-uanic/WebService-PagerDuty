@@ -3,6 +3,9 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty;
+{
+  $WebService::PagerDuty::VERSION = '0.07';
+}
 ## use critic
 use strict;
 use warnings;
@@ -17,6 +20,7 @@ __PACKAGE__->mk_ro_accessors(
     qw/
       user
       password
+      api_key
       subdomain
       use_ssl
       event_url
@@ -61,6 +65,7 @@ sub incidents {
         url      => $self->incidents_url,
         user     => $self->user,
         password => $self->password,
+        api_key  => $self->api_key,
         @_
     );
 }
@@ -71,6 +76,7 @@ sub schedules {
         url      => $self->schedules_url,
         user     => $self->user,
         password => $self->password,
+        api_key  => $self->api_key,
         @_
     );
 }

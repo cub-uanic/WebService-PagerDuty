@@ -3,6 +3,9 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty::Response;
+{
+  $WebService::PagerDuty::Response::VERSION = '0.07';
+}
 ## use critic
 use strict;
 use warnings;

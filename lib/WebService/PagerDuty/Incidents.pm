@@ -3,6 +3,9 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty::Incidents;
+{
+  $WebService::PagerDuty::Incidents::VERSION = '0.07';
+}
 ## use critic
 use strict;
 use warnings;
@@ -16,6 +19,7 @@ __PACKAGE__->mk_ro_accessors(
       url
       user
       password
+      api_key
       /
 );
 
@@ -26,6 +30,7 @@ sub count {
         url      => URI->new( $self->url . '/count' ),
         user     => $self->user,
         password => $self->password,
+        api_key  => $self->api_key,
         params   => \%params,
     );
 }
@@ -37,6 +42,7 @@ sub query {
         url      => $self->url,
         user     => $self->user,
         password => $self->password,
+        api_key  => $self->api_key,
         params   => \%params,
     );
 }
