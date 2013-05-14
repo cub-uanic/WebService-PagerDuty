@@ -3,6 +3,9 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty::Schedules;
+{
+  $WebService::PagerDuty::Schedules::VERSION = '0.07';
+}
 ## use critic
 use strict;
 use warnings;
@@ -16,6 +19,7 @@ __PACKAGE__->mk_ro_accessors(
       url
       user
       password
+      api_key
       /
 );
 
@@ -30,6 +34,7 @@ sub entries {
         url      => URI->new( $self->url . '/' . $id . '/entries' ),
         user     => $self->user,
         password => $self->password,
+        api_key  => $self->api_key,
         params   => \%params,
     );
 }

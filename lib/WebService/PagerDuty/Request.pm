@@ -3,6 +3,9 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty::Request;
+{
+  $WebService::PagerDuty::Request::VERSION = '0.07';
+}
 ## use critic
 use strict;
 use warnings;
@@ -46,16 +49,19 @@ sub _perform_request {
     my $url      = delete $args{url};
     my $user     = delete $args{user};
     my $password = delete $args{password};
+    my $api_key  = delete $args{api_key};
     my $params   = delete $args{params};
     my $body     = {%args};
 
     die( 'Unknown method: ' . $method ) unless $method =~ m/^(get|post)$/io;
+    die( 'api_key and user/password are mutually exclusive') if $api_key && ( $user || $password );
 
     $url->query_form_hash($params) if $params && ref($params) && ref($params) eq 'HASH' && %$params;
 
     my $headers = HTTP::Headers->new;
     $headers->header( 'Content-Type' => 'application/json' ) if %$body;
     $headers->authorization_basic( $user, $password ) if $user && $password;
+    $headers->header( 'Authorization' => "Token token=$api_key" ) if $api_key;
 
     my $content = '';
     $content = objToJson($body) if %$body;
