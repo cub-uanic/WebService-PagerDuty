@@ -3,9 +3,6 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty;
-{
-  $WebService::PagerDuty::VERSION = '0.07';
-}
 ## use critic
 use strict;
 use warnings;
@@ -162,6 +159,10 @@ L<http://PagerDuty.com>, L<http://oDesk.com>
 =head1 AUTHOR
 
 Oleg Kostyuk (cubuanic), C<< <cub@cpan.org> >>
+
+=head1 CONTRIBUTORS
+
+Ryan Olson (Gimpson), C<< <gimpson@cpan.org> >> - support for B<api_key>
 
 =head1 LICENSE
 

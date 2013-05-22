@@ -3,9 +3,6 @@
 ## workaround for PkgVersion
 ## no critic
 package WebService::PagerDuty::Schedules;
-{
-  $WebService::PagerDuty::Schedules::VERSION = '0.07';
-}
 ## use critic
 use strict;
 use warnings;
