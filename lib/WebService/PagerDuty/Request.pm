@@ -61,7 +61,7 @@ sub _perform_request {
     $headers->header( 'Authorization' => "Token token=$api_key" ) if $api_key;
 
     my $content = '';
-    $content = objToJson($body) if %$body;
+    $content = to_json($body) if %$body;
 
     my $request = HTTP::Request->new( $method, $url, $headers, $content );
 
