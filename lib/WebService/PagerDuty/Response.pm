@@ -32,7 +32,7 @@ sub new {
         $options->{errors}  = undef;
 
         try {
-            $options->{data} = jsonToObj( $response->content() ) if $response->content();
+            $options->{data} = from_json( $response->content() ) if $response->content();
         }
         otherwise {
             my $error = shift;

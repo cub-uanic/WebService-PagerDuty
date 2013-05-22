@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 16;
+use Test::Most tests => 17;
 
 use WebService::PagerDuty;
 use WebService::PagerDuty::Schedules;
@@ -81,6 +81,8 @@ my $pager_duty = WebService::PagerDuty->new(
   );
 
   ok(! defined($request_made->headers->authorization_basic),'No basic auth was set');
+
+  cmp_ok($pd_response->entries->[0]{user}{name},'eq','Gimp Gimpson','Response was decoded correctly.');
 }
 
 # Make sure that basic auth and api_key are mutually exclusive.
