@@ -6,6 +6,7 @@ package WebService::PagerDuty::Base;
 ## use critic
 use strict;
 use warnings;
+use Class::Accessor;
 
 use base qw/ Class::Accessor /;
 
