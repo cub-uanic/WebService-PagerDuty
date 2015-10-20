@@ -16,6 +16,7 @@ my @all_options = qw/
   incident_key
   total limit offset
   entries
+  schedules
   data
   /;
 

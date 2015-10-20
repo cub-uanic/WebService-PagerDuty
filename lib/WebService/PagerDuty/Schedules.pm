@@ -37,6 +37,18 @@ sub entries {
 }
 *list = \&entries;
 
+sub all_schedules {
+  my ( $self, %params ) = @_;
+
+    return WebService::PagerDuty::Request->new->get_data(
+        url      => URI->new( $self->url . '/' ),
+        user     => $self->user,
+        password => $self->password,
+        api_key  => $self->api_key,
+        params   => \%params,
+    );
+}
+
 1;
 
 =head1 NAME
@@ -54,6 +66,17 @@ WebService::PagerDuty::Schedules - A schedules object
 
 This class represents a basic schedules object, to get entries
 of existing schedules.
+
+=head1 METHODS
+
+=head2 all_schedules
+
+  my $response = $schedules->all_schedules;
+
+  Returns a response containing a "schedules" attribute, an array reference
+  of all schedules defined for your account.
+
+  https://developer.pagerduty.com/documentation/rest/schedules/list
 
 =head1 SEE ALSO
 
